@@ -14,13 +14,7 @@ def main():
     window_height = 480
 
     ui = user_interface.UserInterface(program_title,icon, window_width, window_height, dictionary_data)
-
-    # If filters are applied, generate the corresponding dictionaries
-    # if ui.all_categories == 1 and ui.all_lectures 
-    anatomy_dict = dict()
-    lection_one_dict = dict()
-    latin_dict = dict()
-    
+        
     ui.root.mainloop()
 
 if __name__ == "__main__":

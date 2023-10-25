@@ -59,7 +59,7 @@ class UserInterface:
                 self.filters_lections.append('3 - ОДС2 - Стави')
 
 
-        dictionary.DictionaryData.create_subdictionaries(self.filters_category, self.filters_lections, dictionary_data.full_dict)
+        dictionary_data.filtered_dict = dictionary.DictionaryData.filter_full_dictionary(self.filters_category, self.filters_lections, dictionary_data.full_dict)
     
 
     def __init__(self, title, icon, win_width, win_height, dictionary_data):
