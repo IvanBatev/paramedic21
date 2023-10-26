@@ -1,7 +1,30 @@
 from tkinter import *
 import dictionary
+import random
+from tkinter.messagebox import showerror
 
 class UserInterface:
+
+    def popup_window(self,title):
+        popup = showerror(title='Paramedic 21', message=title, icon='question')
+        
+
+    def answer(self, definition):
+        self.answer_text.delete("1.0", END)
+
+        for subdef in definition:
+            subdef = '- ' + subdef + '\n\n'
+            self.answer_text.insert(END, subdef)
+
+    def ask(self, dict_data):
+        if len(dict_data.filtered_dict['filtered_dictionary']) > 0:
+            random_entry = random.sample(dict_data.filtered_dict['filtered_dictionary'], 1)
+            lookup_word = random_entry[0]['lookup_word']
+            self.popup_window(lookup_word)
+            self.answer(random_entry[0]['definition'])
+        else:
+            self.popup_window("Empty filtered dictionary!")
+
 
     def change_all_categories(self):
         if self.all_categories.get() == 1:
@@ -80,11 +103,11 @@ class UserInterface:
         screen_height = self.root.winfo_screenheight()    
 
         # Calculate x and y coordinates for the Tk root window 
-        x = (screen_width / 2) - (self.root_width / 2)
-        y = (screen_height / 2) - (self.root_height / 2)
+        self.x = (screen_width / 2) - (self.root_width / 2)
+        self.y = (screen_height / 2) - (self.root_height / 2)
 
         # set the dimensions of the root window and where it is placed
-        self.root.geometry('%dx%d+%d+%d' % (self.root_width, self.root_height, x, y))
+        self.root.geometry('%dx%d+%d+%d' % (self.root_width, self.root_height, self.x, self.y))
 
         # Not resizable
         self.root.resizable(False, False)
@@ -136,22 +159,21 @@ class UserInterface:
         latin_checkbox = Checkbutton(filters_frame, text="Latin dictionary only", variable=self.latin_only, onvalue=1, offvalue=0, anchor='w')
         latin_checkbox.grid(row=3, column=0, columnspan=2, padx=0, sticky='w')
 
+        self.make_filters_lists(dictionary_data)
+        
         setup_button = Button(filters_frame, text="Setup", command=lambda:self.make_filters_lists(dictionary_data))
         setup_button.grid(row=3, column=1, pady=5, padx=10, sticky='e')   
 
         # Control frame
-        control_frame = LabelFrame(self.root, text="Control", height=200)
-        control_frame.grid(row=2, column=0, sticky='wn', pady=10, padx=10 )
-
-        answer_button = Button(control_frame, text="Answer", command=lambda: create_subdictionaries(full_dict, anatomy_dict, lection_one_dict, topic_dict, latin_dict))
-        answer_button.grid(row=0, column=1, pady=5, padx=10)
-
-        ask_button = Button(control_frame, text="Ask", width=6, command=lambda: create_subdictionaries(full_dict, anatomy_dict, lection_one_dict, topic_dict, latin_dict))
+        self.control_frame = LabelFrame(self.root, text="Control", height=200)
+        self.control_frame.grid(row=1, column=0, sticky='wn', pady=10, padx=10 )
+        
+        ask_button = Button(self.control_frame, text="Ask", width=6, command=lambda:self.ask(dictionary_data))
         ask_button.grid(row=0, column=0, pady=5, padx=10)
 
         # Answer text field
-        answer_text = Text(self.root, height=12, width=76, wrap=WORD, borderwidth=5)
-        answer_text.grid(row=3, column=0, pady=5, padx=10)
+        self.answer_text = Text(self.root, height=12, width=76, wrap=WORD, borderwidth=5)
+        self.answer_text.grid(row=3, column=0, pady=5, padx=10)
 
 
         self.root.mainloop()

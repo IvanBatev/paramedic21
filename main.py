@@ -14,7 +14,7 @@ def main():
     window_height = 480
 
     ui = user_interface.UserInterface(program_title,icon, window_width, window_height, dictionary_data)
-        
+
     ui.root.mainloop()
 
 if __name__ == "__main__":
