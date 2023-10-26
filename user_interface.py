@@ -9,11 +9,13 @@ class UserInterface:
         popup = showerror(title='Paramedic 21', message=title, icon='question')
         
 
-    def answer(self, definition):
+    def answer(self, latin, definition):
         self.answer_text.delete("1.0", END)
+        latin = latin.upper() + '\n\n'
+        self.answer_text.insert(END, latin)
 
         for subdef in definition:
-            subdef = '- ' + subdef + '\n\n'
+            subdef = '- ' + subdef + '\n'
             self.answer_text.insert(END, subdef)
 
     def ask(self, dict_data):
@@ -21,7 +23,7 @@ class UserInterface:
             random_entry = random.sample(dict_data.filtered_dict['filtered_dictionary'], 1)
             lookup_word = random_entry[0]['lookup_word']
             self.popup_window(lookup_word)
-            self.answer(random_entry[0]['definition'])
+            self.answer(random_entry[0]['latin'],random_entry[0]['definition'])
         else:
             self.popup_window("Empty filtered dictionary!")
 
@@ -172,7 +174,7 @@ class UserInterface:
         ask_button.grid(row=0, column=0, pady=5, padx=10)
 
         # Answer text field
-        self.answer_text = Text(self.root, height=12, width=76, wrap=WORD, borderwidth=5)
+        self.answer_text = Text(self.root, height=23, width=115, wrap=WORD, borderwidth=5)
         self.answer_text.grid(row=3, column=0, pady=5, padx=10)
 
 

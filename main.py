@@ -10,8 +10,8 @@ def main():
     # Create the UI 
     program_title = "Paramedic 21 речник"
     icon = 'paramedic.ico'
-    window_width = 640
-    window_height = 480
+    window_width = 960
+    window_height = 640
 
     ui = user_interface.UserInterface(program_title,icon, window_width, window_height, dictionary_data)
 
