@@ -42,24 +42,20 @@ class UserInterface:
             self.all_categories.set(0)
 
     def change_all_lections(self, dictionary_data):
-        if self.all_lections.get() == 1:
-            self.lection_one.set(1)
-            self.lection_two.set(1)
-            self.lection_three.set(1)
-            self.lection_four.set(1)
+        if self.lections[0].get() == 1:
+            for lection in self.lections[1:]:
+                lection.set(1)
         else:
-            self.lection_one.set(0)
-            self.lection_two.set(0)
-            self.lection_three.set(0)
-            self.lection_four.set(0)
+            for lection in self.lections[1:]:
+                lection.set(0)
         self.make_filters_lists(dictionary_data)
 
     def change_lection(self, lection, dictionary_data):
         if lection.get() == 0:
-            self.all_lections.set(0)
+            self.lections[0].set(0)
         else: 
-            if self.lection_one.get() == 1 and self.lection_two.get() == 1 and self.lection_three.get() == 1 and self.lection_four.get() == 1:
-                self.all_lections.set(1)
+            if self.lections[1].get() == 1 and self.lections[2].get() == 1 and self.lections[3].get() == 1 and self.lections[4].get() == 1:
+                self.lections[0].set(1)
         self.make_filters_lists(dictionary_data)
 
     def make_filters_lists(self, dictionary_data):
@@ -75,19 +71,18 @@ class UserInterface:
                 self.filters_category.append('anatomy')
 
         # fill in lections list
-        if self.all_lections.get() == 1:
-            self.filters_lections.append('1 - Въведение в анатомията')
-            self.filters_lections.append('2 - ОДС1 - Кости')
-            self.filters_lections.append('3 - ОДС2 - Стави')
-            self.filters_lections.append('4 - ОДС3 - Мускули')
+        if self.lections[0].get() == 1:
+            for i in range(self.num_of_lections-1):
+                self.filters_lections.append(self.lection_names[i])
+                print("self.filters_lections" + self.filters_lections[i])
         else: 
-            if self.lection_one.get() == 1:
+            if self.lections[1].get() == 1:
                 self.filters_lections.append('1 - Въведение в анатомията')
-            if self.lection_two.get() == 1:
+            if self.lections[2].get() == 1:
                 self.filters_lections.append('2 - ОДС1 - Кости')
-            if self.lection_three.get() == 1:
+            if self.lections[3].get() == 1:
                 self.filters_lections.append('3 - ОДС2 - Стави')
-            if self.lection_four.get() == 1:
+            if self.lections[4].get() == 1:
                 self.filters_lections.append('4 - ОДС3 - Мускули')
 
         print("Categories:",self.filters_category)
@@ -104,6 +99,9 @@ class UserInterface:
         self.root = Tk()
         self.root.title(title)
         self.root.iconbitmap(icon)
+
+        # Number of lections (number of lections + 1 [index 0] for all lections options)
+        self.num_of_lections = 5
 
         # Root window dimensions
         self.root_width = win_width
@@ -126,11 +124,17 @@ class UserInterface:
         # Filters Label Frame 
         self.anatomy = IntVar()
         self.all_categories = IntVar()
-        self.lection_one = IntVar()
-        self.lection_two = IntVar()
-        self.lection_three = IntVar()
-        self.lection_four = IntVar()
-        self.all_lections = IntVar()
+
+        # self.lections is list of IntVar()s used in Checkboxes for lections. all_lections is [0]
+        self.lections = []
+        checkboxes = []
+
+        for i in range(self.num_of_lections):
+            self.lections.append(IntVar())
+
+        self.lection_names = dictionary.DictionaryData.generate_list_of_lections(dictionary_data.full_dict)
+        print(self.lection_names)
+
         self.latin_only = IntVar()
 
         # Filters frame 
@@ -149,26 +153,21 @@ class UserInterface:
         all_categories_checkbox.select()
         self.change_all_categories()
 
+        lection_checkboxes = [None] * self.num_of_lections
 
         # Lections frame
         lection_frame = LabelFrame(filters_frame, text="Lection", borderwidth=0, width=200)
         lection_frame.grid(row=0, column=1, sticky='e', pady=5)
 
-        lone_checkbox = Checkbutton(lection_frame, text="1 - Въведение в анатомията", variable=self.lection_one, onvalue=1, offvalue=0, anchor="w", command=lambda:self.change_lection(self.lection_one, dictionary_data))
-        lone_checkbox.grid(row=0, column=0, padx=10, sticky='w')
+        for i in range(self.num_of_lections):
+            if i != 0:
+                lection_checkboxes[i] = Checkbutton(lection_frame, text=self.lection_names[i-1], variable=self.lections[i], onvalue=1, offvalue=0, anchor="w", command=lambda:self.change_lection(self.lections[i], dictionary_data))
+                lection_checkboxes[i].grid(row=i-1, column=0, padx=10, sticky='w')
+            else:
+                lection_checkboxes[i] = Checkbutton(lection_frame, text="Всички", variable=self.lections[i], onvalue=1, offvalue=0, anchor="w", command=lambda:self.change_all_lections(dictionary_data))
+                lection_checkboxes[i].grid(row=i, column=1, padx=10, sticky='w')
+                lection_checkboxes[i].select()
 
-        ltwo_checkbox = Checkbutton(lection_frame, text="2 - ОДС част 1 - Въведение и кости", variable=self.lection_two, onvalue=1, offvalue=0, anchor="w", command=lambda:self.change_lection(self.lection_two, dictionary_data))
-        ltwo_checkbox.grid(row=1, column=0, padx=10, sticky='w')
-
-        lthree_checkbox = Checkbutton(lection_frame, text="3 - ОДС част 2 - Стави", variable=self.lection_three, onvalue=1, offvalue=0, anchor="w", command=lambda:self.change_lection(self.lection_three, dictionary_data))
-        lthree_checkbox.grid(row=2, column=0, padx=10, sticky='w')
-
-        lfour_checkbox = Checkbutton(lection_frame, text="4 - ОДС3 - Мускули", variable=self.lection_four, onvalue=1, offvalue=0, anchor="w", command=lambda:self.change_lection(self.lection_four, dictionary_data))
-        lfour_checkbox.grid(row=3, column=0, padx=10, sticky='w')
-
-        all_lections_checkbox = Checkbutton(lection_frame, text="Всички", variable=self.all_lections, onvalue=1, offvalue=0, anchor="w", command=lambda:self.change_all_lections(dictionary_data))
-        all_lections_checkbox.grid(row=0, column=1, padx=10, sticky='w')
-        all_lections_checkbox.select()
         self.change_all_lections(dictionary_data)
 
         latin_checkbox = Checkbutton(filters_frame, text="Latin dictionary only", variable=self.latin_only, onvalue=1, offvalue=0, anchor='w')
