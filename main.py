@@ -1,11 +1,18 @@
 import user_interface
 import dictionary
+import os
+from tkinter.messagebox import showerror
+
 
 def main():
 
     # Generate the full dictionary
-    dictionary_file = 'dictionary.json'
-    dictionary_data = dictionary.DictionaryData(dictionary_file)
+    if os.path.exists('dictionary.json'):
+        dictionary_file = 'dictionary.json'
+        dictionary_data = dictionary.DictionaryData(dictionary_file)
+    else:
+        err = showerror(title='DICTIONARY', message='ADD DICTIONARY TO THE PROGRAM FOLDER', icon='error')
+        return -1
 
     # Create the UI 
     program_title = "Paramedic 21 речник"
