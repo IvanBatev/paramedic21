@@ -2,6 +2,7 @@ from tkinter import *
 import dictionary
 import random
 from tkinter.messagebox import showerror
+import os
 
 class UserInterface:
 
@@ -129,7 +130,9 @@ class UserInterface:
         # Generate root with title and icon
         self.root = Tk()
         self.root.title(title)
-        self.root.iconbitmap(icon)
+
+        if os.path.exists(icon):
+            self.root.iconbitmap(icon)
 
         # Root window dimensions
         self.root_width = win_width
