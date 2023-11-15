@@ -195,7 +195,7 @@ class UserInterface:
 
         self.change_lection(dictionary_data)
 
-        latin_checkbox = Checkbutton(filters_frame, text="Latin dictionary only", variable=self.latin_only, onvalue=1, offvalue=0, anchor='w')
+        latin_checkbox = Checkbutton(filters_frame, text="Latin dictionary only", variable=self.latin_only, onvalue=1, offvalue=0, anchor='w', command=lambda:self.change_lection(dictionary_data))
         latin_checkbox.grid(row=3, column=0, columnspan=2, padx=0, sticky='w')
 
         #self.make_filters_lists(dictionary_data)
