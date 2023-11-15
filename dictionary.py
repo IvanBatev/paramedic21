@@ -21,8 +21,17 @@ class DictionaryData:
                         if entry not in filtered_dict['filtered_dictionary'] and entry['latin'] != "":
                             filtered_dict['filtered_dictionary'].append(entry)
 
-
         return filtered_dict
+    
+    def generate_list_of_lections(full_dict):
+        
+        list_of_lections = ['Всички']
+        for entry in full_dict['dictionary']:
+            for key, value in entry.items():
+                if key == 'lection' and value not in list_of_lections:
+                    list_of_lections.append(value)
+        
+        return list_of_lections
 
     def clear_text_field(self):
         pass
